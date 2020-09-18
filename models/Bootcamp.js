@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const slugify  = require('slugify');
+const geocoder = require('../utils/geocoder');
 
 const BooytcampSchema = new mongoose.Schema({
   name: {
@@ -77,6 +79,15 @@ const BooytcampSchema = new mongoose.Schema({
     type: String,
     default: 'no.photo.jpg'
   }
+});
+
+BooytcampSchema.pre('save', function(next) {
+  this.slug = slugify(this.name, {lower: true})
+  next();
+});
+
+BooytcampSchema.pre('save', function(next) {
+  next();
 });
 
 module.exports = mongoose.model('Bootcamp', BooytcampSchema);

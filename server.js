@@ -1,7 +1,8 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const morgan = require('morgan');
-const connectDB = require('./config/db')
+const connectDB = require('./config/db');
+const errorHandler = require('./middleware/error');
 
 dotenv.config({path: './config/config.env'});
 
@@ -22,6 +23,8 @@ if(process.env.NODE_ENV === 'development') {
 const PORT = process.env.PORT;
 
 app.use('/api/v1/bootcamps', routes);
+
+app.use(errorHandler);
 
 const server = app.listen(PORT, console.log(`${process.env.NODE_ENV} on ${PORT}`));
 

@@ -1,3 +1,4 @@
+const ErrorResponse = require('../utils/errorResponse');
 const BootcampModel = require('../models/Bootcamp');
 
 exports.getBootcamps = (req, res, next)=> {
@@ -7,8 +8,7 @@ exports.getBootcamps = (req, res, next)=> {
       data: data
     });
   }).catch((error) => {
-    console.log(error);
-    res.status(400).json({success: false, error: error});
+    next(error);
   });
 };
 
@@ -16,7 +16,7 @@ exports.getBootcamp = (req, res, next)=> {
   BootcampModel.findById(req.params.id).then(data => {
 
     if(!data) {
-      return res.status(400).json({success: false, error: 'item not found'});
+      return next(new ErrorResponse(`Bootcamp not found with id ${req.params.id}`, 400));
     }
 
     res.status(200).json({
@@ -24,10 +24,8 @@ exports.getBootcamp = (req, res, next)=> {
       data: data
     });
   }).catch((error) => {
-    console.log(error);
-    res.status(400).json({success: false, error: error});
+    next(error);
   });
-  //res.status(200).json({success: true, msg: `get bootcamp ${req.params.id}`});
 };
 
 exports.createBootcamp = (req, res, next)=> {
@@ -37,8 +35,7 @@ exports.createBootcamp = (req, res, next)=> {
       data: data
     });
   }).catch((error) => {
-    console.log(error);
-    res.status(400).json({success: false, error: error});
+    next(error);
   });
 };
 
@@ -49,7 +46,7 @@ exports.updateBootcamp = (req, res, next)=> {
   }).then(data => {
 
     if(!data) {
-      return res.status(400).json({success: false, error: 'item not found'});
+      return next(new ErrorResponse(`Bootcamp not found with id ${req.params.id}`, 400));
     }
 
     res.status(200).json({
@@ -57,17 +54,15 @@ exports.updateBootcamp = (req, res, next)=> {
       data: data
     });
   }).catch((error) => {
-    console.log(error);
-    res.status(400).json({success: false, error: error});
+    next(error);
   });
-  //res.status(200).json({success: true, msg: `update bootcamp ${req.params.id}`});
 };
 
 exports.deleteBootcamp = (req, res, next)=> {
   BootcampModel.findByIdAndDelete(req.params.id).then(data => {
 
     if(!data) {
-      return res.status(400).json({success: false, error: 'item not found'});
+      return next(new ErrorResponse(`Bootcamp not found with id ${req.params.id}`, 400));
     }
 
     res.status(200).json({
@@ -75,7 +70,6 @@ exports.deleteBootcamp = (req, res, next)=> {
       data: data
     });
   }).catch((error) => {
-    console.log(error);
-    res.status(400).json({success: false, error: error});
+    next(error);
   });
 };
