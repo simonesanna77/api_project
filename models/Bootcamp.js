@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const slugify  = require('slugify');
-const geocoder = require('../utils/geocoder');
 
 const BooytcampSchema = new mongoose.Schema({
   name: {
@@ -60,10 +59,11 @@ const BooytcampSchema = new mongoose.Schema({
     type: [String],
     required: true,
     enum: [
-      'Web Dev',
+      'Web Development',
       'UI/UX',
       'Data Science',
       'Business',
+      'Mobile Development',
       'Other'
     ]
   },
@@ -83,10 +83,6 @@ const BooytcampSchema = new mongoose.Schema({
 
 BooytcampSchema.pre('save', function(next) {
   this.slug = slugify(this.name, {lower: true})
-  next();
-});
-
-BooytcampSchema.pre('save', function(next) {
   next();
 });
 
