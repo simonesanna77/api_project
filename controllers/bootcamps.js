@@ -1,14 +1,14 @@
 const ErrorResponse = require('../utils/errorResponse');
 const BootcampModel = require('../models/Bootcamp');
 
-exports.getBootcamps = (req, res, next)=> {
+exports.getBootcamps = async (req, res, next)=> {
   //console.log(req.query)
 
   let query;
 
   const reqQuery = {...req.query};
 
-  const removeFields = ['select', 'sort'];
+  const removeFields = ['select', 'sort', 'page', 'limit'];
 
   removeFields.forEach(param => delete reqQuery[param]);
 
@@ -30,11 +30,36 @@ exports.getBootcamps = (req, res, next)=> {
     query = query.sort('-createdAt');
   }
 
+  const page = parseInt(req.query.page, 10) || 1;
+  const limit = parseInt(req.query.limit, 10) || 1;
+  const startIndex = (page - 1) * limit;
+  const endIndex = page * limit;
+  const total = await BootcampModel.countDocuments();
+
+  query = query.skip(startIndex).limit(limit);
+
+  const pagination = {};
+
+  if (endIndex < total) {
+    pagination.next = {
+      page: page + 1,
+      limit
+    }
+  }
+
+  if (startIndex > 0)  {
+    pagination.prev = {
+      page: page - 1,
+      limit
+    }
+  }
+
   query.then(data => {
     res.status(200).json({
       success: true,
       count: data.length,
-      data: data
+      data: data,
+      pagination
     });
   }).catch((error) => {
     next(error);

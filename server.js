@@ -9,7 +9,9 @@ dotenv.config({path: './config/config.env'});
 connectDB();
 
 //routes
-const routes = require('./routes/bootcamp');
+const bootcamps = require('./routes/bootcamp');
+
+const courses = require('./routes/courses');
 
 const app = express();
 
@@ -22,7 +24,9 @@ if(process.env.NODE_ENV === 'development') {
 
 const PORT = process.env.PORT;
 
-app.use('/api/v1/bootcamps', routes);
+app.use('/api/v1/bootcamps', bootcamps);
+
+app.use('/api/v1/courses', courses);
 
 app.use(errorHandler);
 
